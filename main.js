@@ -1,23 +1,26 @@
 /**
- * 
- * @param {string} nom 
+ * creer un HTMLElement
+ * @param {string} name 
  * @param {Object} attributes 
  * @param {HTMLElement} parent 
- * @param {string} texte
+ * @param {string|HTMLElement} content
  * @returns {HTMLElement}
  */
-function createElement(nom, attributes, parent, texte) {
-    const element = document.createElement(nom)
+function createHTML(name, attributes, parent, content) {
+    if (typeof name !== "string")
+        return
+    const element = document.createElement(name)
 
     // Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value))
 
     for (const key in attributes) {
-        console.log(key, attributes);
         element.setAttribute(key, attributes[key])
     }
-    
-    if (texte)
-        element.innerText = texte
+
+    if (typeof content === "string")
+        element.innerText = content
+    else if (element instanceof HTMLElement)
+        element.innerHTML = content
 
     parent.appendChild(element)
 
@@ -26,7 +29,18 @@ function createElement(nom, attributes, parent, texte) {
 
 
 
-const canvas = createElement('canvas', { id: "xxx", class: 'zaer', width: 500, height: 500 }, document.body)
-const buttonGenerate = createElement('button', { id: 'btnGenerate' }, document.body, "GENERATE")
-const buttonSolve = createElement('button', { id: 'btnSolve' }, document.body, "SOLVE")
+const canvas = createHTML('canvas', { id: "xxx", class: 'zaer', width: 500, height: 500 }, document.body)
+const buttonGenerate = createHTML('button', { id: 'btnGenerate' }, document.body, "GENERATE")
+const buttonSolve = createHTML('button', { id: 'btnSolve' }, document.body, "SOLVE")
 const ctx = canvas.getContext('2d')
+
+buttonGenerate.addEventListener('click', generate)
+buttonSolve.addEventListener('click', solve)
+
+function solve(evt) {
+    console.log('solve');
+}
+
+function generate(evt) {
+    console.log('generate');
+}
