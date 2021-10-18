@@ -113,7 +113,7 @@ function update() {
 //#endregion
 
 
-//#region array node
+//#region array double
 // let nodes = []
 const COLONNES = 11
 const LIGNES = 9
@@ -128,6 +128,7 @@ function makeDoubleArray(x, y, elementsCallback) {
     }
     return doubleArray
 }
+//#endregion
 
 function newNode(x, y) {
     return {
@@ -146,4 +147,33 @@ function newNode(x, y) {
 let nodes = makeDoubleArray(COLONNES, LIGNES, newNode)
 
 
+//#region array simple
+function makeArray(x, y, elementsCallback) {
+    const arr = []
+    for (let i = 0; i < x * y; i++) {
+        arr[i] = elementsCallback(Math.trunc(i / y), i % x)
+    }
+
+    return arr
+}
+
+function voisinsArraySimple(arr, node) {
+    let index = arr.indexOf(node)
+    let voisins = []
+    if (index > -1) {
+        if (arr[index + 1])
+            voisins.push(arr[index + 1])
+
+        if (arr[index - 1])
+            voisins.push(arr[index - 1])
+
+        if (arr[index + COLONNES])
+            voisins.push(arr[index + COLONNES])
+
+        if (arr[index - COLONNES])
+            voisins.push(arr[index - COLONNES])
+    }
+
+    return voisins
+}
 //#endregion
