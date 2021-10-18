@@ -128,6 +128,31 @@ function makeDoubleArray(x, y, elementsCallback) {
     }
     return doubleArray
 }
+function voisinsArrayDouble(arr, node) {
+    let voisins = []
+    if (node == undefined)
+        return voisins
+        
+    let x = node.x
+    let y = node.y
+    if (arr[x][y]) {
+
+        if (arr[x + 1][y]) {
+            voisins.push(arr[x + 1][y])
+        }
+        if (arr[x - 1][y]) {
+            voisins.push(arr[x - 1][y])
+        }
+        if (arr[x][y + 1]) {
+            voisins.push(arr[x][y + 1])
+        }
+        if (arr[x][y - 1]) {
+            voisins.push(arr[x][y - 1])
+        }
+    }
+    return voisins
+
+}
 //#endregion
 
 function newNode(x, y) {
