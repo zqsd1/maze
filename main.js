@@ -41,14 +41,18 @@ function createHTML(name, attributes, parent, content) {
 }
 
 
-
+//#region  html
 const canvas = createHTML('canvas', { id: "canvas", class: "mycanvas", width: CANVAS_WIDTH, height: CANVAS_HEIGHT }, document.body)
 const buttonGenerate = createHTML('button', { id: 'btnGenerate' }, document.body, "GENERATE")
 const buttonSolve = createHTML('button', { id: 'btnSolve' }, document.body, "SOLVE")
+const buttonDraw = createHTML('button', { id: 'btnDraw' }, document.body, "DRAW")
 const ctx = canvas.getContext('2d')
-
+//#endregion
+//#region event
 buttonGenerate.addEventListener('click', generate)
 buttonSolve.addEventListener('click', solve)
+buttonDraw.addEventListener('click', draw)
+//#endregion
 
 function solve(evt) {
     console.log('solve');
@@ -115,10 +119,10 @@ function update() {
 
 //#region array double
 // let nodes = []
-const COLONNES = 11
-const LIGNES = 9
+const COLONNES = 11//x
+const LIGNES = 9//y
 
-function makeDoubleArray(x, y, elementsCallback) {
+function generateArrayDouble(x, y, elementsCallback) {
     const doubleArray = []
     for (let i = 0; i < x; i++) {
         doubleArray[i] = []
@@ -128,7 +132,12 @@ function makeDoubleArray(x, y, elementsCallback) {
     }
     return doubleArray
 }
+
+
 function voisinsArrayDouble(arr, node) {
+
+    return voisinsArraySimple(arr.flat(), node)
+
     let voisins = []
     if (node == undefined)
         return voisins
@@ -169,14 +178,17 @@ function newNode(x, y) {
     }
 }
 
-let nodes = makeDoubleArray(COLONNES, LIGNES, newNode)
+let nodes = generateArrayDouble(COLONNES, LIGNES, newNode)
 
+let nodesSimple = generateArray(COLONNES, LIGNES, newNode)
+
+console.log(voisinsArraySimple(nodes.flat(), nodes[5][5]))
 
 //#region array simple
-function makeArray(x, y, elementsCallback) {
+function generateArray(x, y, elementsCallback) {
     const arr = []
     for (let i = 0; i < x * y; i++) {
-        arr[i] = elementsCallback(i % x, Math.trunc(i / x))
+        arr[i] = elementsCallback(Math.trunc(i / y), i % y)
     }
 
     return arr
@@ -202,3 +214,6 @@ function voisinsArraySimple(arr, node) {
     return voisins
 }
 //#endregion
+
+
+console.log(nodes.flat(), nodesSimple);
