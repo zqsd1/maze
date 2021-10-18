@@ -132,7 +132,7 @@ function voisinsArrayDouble(arr, node) {
     let voisins = []
     if (node == undefined)
         return voisins
-        
+
     let x = node.x
     let y = node.y
     if (arr[x][y]) {
@@ -176,7 +176,7 @@ let nodes = makeDoubleArray(COLONNES, LIGNES, newNode)
 function makeArray(x, y, elementsCallback) {
     const arr = []
     for (let i = 0; i < x * y; i++) {
-        arr[i] = elementsCallback(Math.trunc(i / y), i % x)
+        arr[i] = elementsCallback(i % x, Math.trunc(i / x))
     }
 
     return arr
