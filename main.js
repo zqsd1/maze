@@ -104,10 +104,46 @@ function togglePause() {
 }
 
 function draw() {
-ctx.fillRect(50,50,100,10)
+    nodes.forEach(tab => tab.forEach(node => node.draw(ctx)))
 }
 
 function update() {
 
 }
+//#endregion
+
+
+//#region array node
+// let nodes = []
+const COLONNES = 11
+const LIGNES = 9
+
+function makeDoubleArray(x, y, elementsCallback) {
+    const doubleArray = []
+    for (let i = 0; i < x; i++) {
+        doubleArray[i] = []
+        for (let j = 0; j < y; j++) {
+            doubleArray[i][j] = elementsCallback(i, j)
+        }
+    }
+    return doubleArray
+}
+
+function newNode(x, y) {
+    return {
+        x: x,
+        y: y,
+        walls: 15,
+        draw: function (ctx) {
+            let w = ctx.canvas.width / COLONNES
+            let h = ctx.canvas.height / LIGNES
+            ctx.strokeRect(this.x * w, this.y * h, w, h)
+
+        }
+    }
+}
+
+let nodes = makeDoubleArray(COLONNES, LIGNES, newNode)
+
+
 //#endregion
