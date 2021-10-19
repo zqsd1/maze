@@ -73,6 +73,7 @@ function solve(evt) {
 function generate(evt) {
     togglePause()
     console.log('generate');
+    DFS(nodes, nodes[0][0])
 }
 
 
@@ -120,6 +121,8 @@ function togglePause() {
 }
 
 function draw() {
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
+    ctx.beginPath()
     nodes.flat().forEach(node => node.draw(ctx))
 }
 
@@ -178,14 +181,18 @@ function getVoisins(arr, node) {
         }))
     });
 
-    return voisins
+    //filter pour enlever les undefinied
+    return voisins.filter(element => element)
 }
 
 function removeWall(nodeA, nodeB) {
+
+    const wpos = ['top', 'left', 'bottom', 'right']
+    const wopp = ['bottom', 'right', 'top', 'left']
     let pos = { x: nodeB.x - nodeA.x, y: nodeB.y - nodeA.y }
     let tmp = VOISINS_POSSIBLE.findIndex(element => element.x == pos.x && element.y == pos.y)
-    nodeA.removeWall(WALLS_POSSIBLE[tmp])
-    nodeB.removeWall(WALLS_OPPOSE[tmp])
+    nodeA.removeWall(wopp[tmp])
+    nodeB.removeWall(wpos[tmp])
 }
 
 
