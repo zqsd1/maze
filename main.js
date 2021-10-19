@@ -68,6 +68,13 @@ buttonDraw.addEventListener('click', draw)
 
 function solve(evt) {
     console.log('solve');
+    let resultat = A_Star(nodes, nodes[0][0], nodes[COLONNES - 1][LIGNES - 1])
+    togglePause()
+
+    resultat.forEach(node => {
+        ctx.fillStyle = 'rgba(0,100,100,0.5)'
+        ctx.fillRect(node.x * CANVAS_WIDTH / COLONNES, node.y * CANVAS_HEIGHT / LIGNES, CANVAS_WIDTH / COLONNES, CANVAS_HEIGHT / LIGNES)
+    });
 }
 
 function generate(evt) {
@@ -200,6 +207,28 @@ function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min;
+}
+
+
+function pathTo(arr, node) {
+    let voisins = []
+    let array = arr.flat()
+    if (!node.isWall('top')) {
+        voisins.push(array.find(element => element.x == node.x && element.y == node.y - 1))
+    }
+    if (!node.isWall('right')) {
+        voisins.push(array.find(element => element.x == node.x + 1 && element.y == node.y))
+
+    }
+    if (!node.isWall('bottom')) {
+        voisins.push(array.find(element => element.x == node.x && element.y == node.y + 1))
+
+    }
+    if (!node.isWall('left')) {
+        voisins.push(array.find(element => element.x == node.x - 1 && element.y == node.y))
+
+    }
+    return voisins
 }
 
 
