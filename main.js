@@ -73,7 +73,7 @@ function solve(evt) {
 function generate(evt) {
     togglePause()
     console.log('generate');
-    DFS(nodes, nodes[0][0])
+    DFS_Random(nodes, nodes[0][0])
 }
 
 
@@ -193,6 +193,13 @@ function removeWall(nodeA, nodeB) {
     let tmp = VOISINS_POSSIBLE.findIndex(element => element.x == pos.x && element.y == pos.y)
     nodeA.removeWall(wopp[tmp])
     nodeB.removeWall(wpos[tmp])
+}
+
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
 }
 
 

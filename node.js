@@ -5,12 +5,13 @@ class Node {
         this.y = y
         this.walls = 15
         this.color = false
+        this.discovered = false
     }
 
     removeWall(pos) {
         let w = WALLS_POSSIBLE.indexOf(pos)
         if (w > -1)
-            this.walls = clearBit(this.walls, w)
+           return this.walls = clearBit(this.walls, w)
     }
 
     isWall(pos) {
@@ -22,7 +23,7 @@ class Node {
     buildWall(pos) {
         let w = WALLS_POSSIBLE.indexOf(pos)
         if (w > -1)
-            this.walls = setBit(this.walls, w)
+           return this.walls = setBit(this.walls, w)
     }
 
 
