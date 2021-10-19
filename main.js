@@ -18,6 +18,7 @@ const VOISINS_POSSIBLE = [
 ]
 
 const WALLS_POSSIBLE = ['top', 'right', 'bottom', 'left']
+const WALLS_OPPOSE = ['bottom', 'left', 'top', 'right']
 //#endregion
 
 
@@ -158,6 +159,14 @@ function newNode(x, y) {
     return new Node(x, y)
 }
 
+
+
+/**
+ * 
+ * @param {[Node]} arr 
+ * @param {Node} node 
+ * @returns {[Node]}
+ */
 function getVoisins(arr, node) {
     //pour gerer les 2 types de array
     let array = arr.flat()
@@ -170,6 +179,13 @@ function getVoisins(arr, node) {
     });
 
     return voisins
+}
+
+function removeWall(nodeA, nodeB) {
+    let pos = { x: nodeB.x - nodeA.x, y: nodeB.y - nodeA.y }
+    let tmp = VOISINS_POSSIBLE.findIndex(element => element.x == pos.x && element.y == pos.y)
+    nodeA.removeWall(WALLS_POSSIBLE[tmp])
+    nodeB.removeWall(WALLS_OPPOSE[tmp])
 }
 
 
