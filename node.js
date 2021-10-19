@@ -8,19 +8,19 @@ class Node {
     }
 
     removeWall(pos) {
-        let w = wallsP.indexOf(pos)
+        let w = WALLS_POSSIBLE.indexOf(pos)
         if (w > -1)
             this.walls = clearBit(this.walls, w)
     }
 
     isWall(pos) {
-        let w = wallsP.indexOf(pos)
+        let w = WALLS_POSSIBLE.indexOf(pos)
         if (w > -1)
             return getBit(this.walls, w)
     }
 
     buildWall(pos) {
-        let w = wallsP.indexOf(pos)
+        let w = WALLS_POSSIBLE.indexOf(pos)
         if (w > -1)
             this.walls = setBit(this.walls, w)
     }
@@ -33,7 +33,7 @@ class Node {
         let posx = this.x * w
         let posy = this.y * h
 
-        ctx.beginPath()
+
         ctx.save()
         ctx.translate(posx, posy)
 
@@ -84,5 +84,3 @@ function setBit(num, i) {
 
 }
 
-
-wallsP = ['top', 'right', 'bottom', 'left']

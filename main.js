@@ -119,7 +119,7 @@ function togglePause() {
 }
 
 function draw() {
-    nodes.forEach(tab => tab.forEach(node => node.draw(ctx)))
+    nodes.flat().forEach(node => node.draw(ctx))
 }
 
 function update() {
