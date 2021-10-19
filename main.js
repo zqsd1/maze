@@ -156,22 +156,6 @@ function generateArray(x, y, elementsCallback) {
 
 function newNode(x, y) {
     return new Node(x, y)
-    return {
-        x: x,
-        y: y,
-        walls: 15,
-        color: false,
-        draw: function (ctx) {
-            let w = ctx.canvas.width / COLONNES
-            let h = ctx.canvas.height / LIGNES
-            ctx.strokeRect(this.x * w, this.y * h, w, h)
-            if (this.color) {
-                ctx.fillStyle = 'yellow'
-                ctx.fillRect(this.x * w, this.y * h, w, h)
-            }
-
-        }
-    }
 }
 
 function getVoisins(arr, node) {
