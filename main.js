@@ -6,7 +6,18 @@ const FPS = 60
 const INTERVAL = 1000 / FPS
 const U_SPEED = 20
 
+const COLONNES = 11//x
+const LIGNES = 9//y
 
+
+const VOISINS_POSSIBLE = [
+    { x: 0, y: 1 },
+    { x: 1, y: 0 },
+    { x: 0, y: -1 },
+    { x: -1, y: 0 }
+]
+
+const WALLS_POSSIBLE = ['top', 'right', 'bottom', 'left']
 //#endregion
 
 
@@ -118,10 +129,6 @@ function update() {
 
 
 //#region array double
-// let nodes = []
-const COLONNES = 11//x
-const LIGNES = 9//y
-
 function generateArrayDouble(x, y, elementsCallback) {
     const doubleArray = []
     for (let i = 0; i < x; i++) {
@@ -133,87 +140,62 @@ function generateArrayDouble(x, y, elementsCallback) {
     return doubleArray
 }
 
+//#endregion
 
-function voisinsArrayDouble(arr, node) {
-
-    return voisinsArraySimple(arr.flat(), node)
-
-    let voisins = []
-    if (node == undefined)
-        return voisins
-
-    let x = node.x
-    let y = node.y
-    if (arr[x][y]) {
-
-        if (arr[x + 1][y]) {
-            voisins.push(arr[x + 1][y])
-        }
-        if (arr[x - 1][y]) {
-            voisins.push(arr[x - 1][y])
-        }
-        if (arr[x][y + 1]) {
-            voisins.push(arr[x][y + 1])
-        }
-        if (arr[x][y - 1]) {
-            voisins.push(arr[x][y - 1])
-        }
+//#region array simple
+function generateArray(x, y, elementsCallback) {
+    const array = []
+    for (let i = 0; i < x * y; i++) {
+        array[i] = elementsCallback(Math.trunc(i / y), i % y)
     }
-    return voisins
 
+    return array
 }
 //#endregion
 
+
 function newNode(x, y) {
+    return new Node(x, y)
     return {
         x: x,
         y: y,
         walls: 15,
+        color: false,
         draw: function (ctx) {
             let w = ctx.canvas.width / COLONNES
             let h = ctx.canvas.height / LIGNES
             ctx.strokeRect(this.x * w, this.y * h, w, h)
+            if (this.color) {
+                ctx.fillStyle = 'yellow'
+                ctx.fillRect(this.x * w, this.y * h, w, h)
+            }
 
         }
     }
 }
+
+function getVoisins(arr, node) {
+    //pour gerer les 2 types de array
+    let array = arr.flat()
+
+    let voisins = []
+    VOISINS_POSSIBLE.forEach(voisin => {
+        voisins.push(array.find(element => {
+            return element.x === node.x + voisin.x && element.y === node.y + voisin.y
+        }))
+    });
+
+    return voisins
+}
+
+
 
 let nodes = generateArrayDouble(COLONNES, LIGNES, newNode)
 
 let nodesSimple = generateArray(COLONNES, LIGNES, newNode)
 
-console.log(voisinsArraySimple(nodes.flat(), nodes[5][5]))
+// let voisins = voisinsArrayDouble(nodes, nodes[3][5])
+// voisins.forEach(element => {
+//     element.color = true
+// });
 
-//#region array simple
-function generateArray(x, y, elementsCallback) {
-    const arr = []
-    for (let i = 0; i < x * y; i++) {
-        arr[i] = elementsCallback(Math.trunc(i / y), i % y)
-    }
-
-    return arr
-}
-
-function voisinsArraySimple(arr, node) {
-    let index = arr.indexOf(node)
-    let voisins = []
-    if (index > -1) {
-        if (arr[index + 1])
-            voisins.push(arr[index + 1])
-
-        if (arr[index - 1])
-            voisins.push(arr[index - 1])
-
-        if (arr[index + COLONNES])
-            voisins.push(arr[index + COLONNES])
-
-        if (arr[index - COLONNES])
-            voisins.push(arr[index - COLONNES])
-    }
-
-    return voisins
-}
-//#endregion
-
-
-console.log(nodes.flat(), nodesSimple);
