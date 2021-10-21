@@ -1,24 +1,34 @@
 //#region variables
-const CANVAS_WIDTH = 500
+const CANVAS_WIDTH = 300
 const CANVAS_HEIGHT = 300
 
 const FPS = 60
 const INTERVAL = 1000 / FPS
 const U_SPEED = 20
 
-const COLONNES = 11//x
-const LIGNES = 9//y
+const COLONNES = 8//x
+const LIGNES = 8//y
 
 
 const VOISINS_POSSIBLE = [
-    { x: 0, y: 1 },
-    { x: 1, y: 0 },
-    { x: 0, y: -1 },
-    { x: -1, y: 0 }
+    new Position(0, -1),//top
+    new Position(1, 0),//right
+    new Position(0, 1),//bot
+    new Position(-1, 0)//left
+    // { x: 0, y: 1 },
+    // { x: 1, y: 0 },
+    // { x: 0, y: -1 },
+    // { x: -1, y: 0 }
 ]
 
-const WALLS_POSSIBLE = ['top', 'right', 'bottom', 'left']
-const WALLS_OPPOSE = ['bottom', 'left', 'top', 'right']
+// const WALLS_POSSIBLE = ['top', 'right', 'bottom', 'left']
+
+// const WALLS_OPPOSE = ['bottom', 'left', 'top', 'right']
+
+
+
+const NODE_W = CANVAS_WIDTH / COLONNES
+const NODE_H = CANVAS_HEIGHT / LIGNES
 //#endregion
 
 
@@ -73,7 +83,7 @@ function solve(evt) {
 
     resultat.forEach(node => {
         ctx.fillStyle = 'rgba(0,100,100,0.5)'
-        ctx.fillRect(node.x * CANVAS_WIDTH / COLONNES, node.y * CANVAS_HEIGHT / LIGNES, CANVAS_WIDTH / COLONNES, CANVAS_HEIGHT / LIGNES)
+        ctx.fillRect(node.x * NODE_W, node.y * NODE_H, NODE_W, NODE_H)
     });
 }
 
@@ -83,6 +93,16 @@ function generate(evt) {
     DFS_Random(nodes, nodes[0][0])
 }
 
+
+function newNode(x, y) {
+    return new Node(x, y)
+}
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+}
 
 //#region animation
 let animationFrame, lastFrameTime, lastUpdateTime
@@ -127,6 +147,7 @@ function togglePause() {
     }
 }
 
+
 function draw() {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
     ctx.beginPath()
@@ -165,80 +186,80 @@ function generateArray(x, y, elementsCallback) {
 //#endregion
 
 
-function newNode(x, y) {
-    return new Node(x, y)
-}
-
-
-
 /**
- * 
- * @param {[Node]} arr 
+ * list les voisins du node existant dans arr
+ * @param {Array} arr 
  * @param {Node} node 
- * @returns {[Node]}
+ * @returns {Array}
  */
 function getVoisins(arr, node) {
     //pour gerer les 2 types de array
     let array = arr.flat()
-
     let voisins = []
+
     VOISINS_POSSIBLE.forEach(voisin => {
         voisins.push(array.find(element => {
-            return element.x === node.x + voisin.x && element.y === node.y + voisin.y
+            return element.position.isEquals(node.position.ajout(voisin))
         }))
     });
-
     //filter pour enlever les undefinied
     return voisins.filter(element => element)
 }
 
-function removeWall(nodeA, nodeB) {
 
-    const wpos = ['top', 'left', 'bottom', 'right']
-    const wopp = ['bottom', 'right', 'top', 'left']
-    let pos = { x: nodeB.x - nodeA.x, y: nodeB.y - nodeA.y }
-    let tmp = VOISINS_POSSIBLE.findIndex(element => element.x == pos.x && element.y == pos.y)
-    nodeA.removeWall(wopp[tmp])
-    nodeB.removeWall(wpos[tmp])
+/**
+ * retire le mur entre les 2 nodes
+ * @param {Node} node 
+ * @param {Node} voisin 
+ */
+function removeWall(node, voisin) {
+    let diff = voisin.position.minus(node.position)
+
+    let i = VOISINS_POSSIBLE.findIndex(element => element.isEquals(diff))
+    node.removeWall(i)
+    //node.walls = clearBit(node.walls, index)
+
+    let j = VOISINS_POSSIBLE.findIndex(element => element.isEquals(diff.oppose))
+    voisin.removeWall(j)
+    // voisin.walls = clearBit(voisin.walls, j)
 }
 
-
-function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
-}
-
-
-function pathTo(arr, node) {
-    let voisins = []
+/**
+ * list les chemin possible du node
+ * @param {Array} arr 
+ * @param {Node} node 
+ * @returns {Array}
+ */
+function getPath(arr, node) {
     let array = arr.flat()
-    if (!node.isWall('top')) {
-        voisins.push(array.find(element => element.x == node.x && element.y == node.y - 1))
-    }
-    if (!node.isWall('right')) {
-        voisins.push(array.find(element => element.x == node.x + 1 && element.y == node.y))
+    let paths = []
+    VOISINS_POSSIBLE.forEach((voisin, i) => {
+        if (!node.hasWall(i)) {
+            let p = array.find(element => element.position.isEquals(node.position.ajout(voisin)))
+            paths.push(p)
+        }
+    })
 
-    }
-    if (!node.isWall('bottom')) {
-        voisins.push(array.find(element => element.x == node.x && element.y == node.y + 1))
+    // for (let i = 0; i < VOISINS_POSSIBLE.length; i++) {
+    //     if (!node.hasWall(i)) {
+    //         let p = array.find(element => element.position.isEquals(node.position.ajout(VOISINS_POSSIBLE[i])))
+    //         paths.push(p)
+    //     }
+    // }
+    return paths
 
-    }
-    if (!node.isWall('left')) {
-        voisins.push(array.find(element => element.x == node.x - 1 && element.y == node.y))
-
-    }
-    return voisins
 }
+
+
+
+
+
+
+
 
 
 
 let nodes = generateArrayDouble(COLONNES, LIGNES, newNode)
 
 let nodesSimple = generateArray(COLONNES, LIGNES, newNode)
-
-// let voisins = voisinsArrayDouble(nodes, nodes[3][5])
-// voisins.forEach(element => {
-//     element.color = true
-// });
 

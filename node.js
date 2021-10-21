@@ -3,27 +3,21 @@ class Node {
     constructor(x, y) {
         this.x = x
         this.y = y
+        this.position = new Position(x, y)
         this.walls = 15
-        this.color = false
         this.discovered = false
     }
 
     removeWall(pos) {
-        let w = WALLS_POSSIBLE.indexOf(pos)
-        if (w > -1)
-           return this.walls = clearBit(this.walls, w)
-    }
-
-    isWall(pos) {
-        let w = WALLS_POSSIBLE.indexOf(pos)
-        if (w > -1)
-            return getBit(this.walls, w)
+        return this.walls = clearBit(this.walls, pos)
     }
 
     buildWall(pos) {
-        let w = WALLS_POSSIBLE.indexOf(pos)
-        if (w > -1)
-           return this.walls = setBit(this.walls, w)
+        return this.walls = setBit(this.walls, pos)
+    }
+
+    hasWall(pos) {
+        return getBit(this.walls, pos)
     }
 
 
@@ -38,31 +32,28 @@ class Node {
         ctx.save()
         ctx.translate(posx, posy)
 
-        if (this.isWall("top")) {
+
+        if (this.hasWall(0)) {
             ctx.moveTo(0, 0)
             ctx.lineTo(w, 0)
         }
-        if (this.isWall("right")) {
+
+        if (this.hasWall(1)) {
             ctx.moveTo(w, 0)
             ctx.lineTo(w, h)
         }
-        if (this.isWall("bottom")) {
+
+        if (this.hasWall(2)) {
             ctx.moveTo(w, h)
             ctx.lineTo(0, h)
         }
-        if (this.isWall("left")) {
+
+        if (this.hasWall(3)) {
             ctx.moveTo(0, h)
             ctx.lineTo(0, 0)
         }
-
         ctx.stroke()
 
-
-
-        if (this.color) {
-            ctx.fillStyle = 'yellow'
-            ctx.fillRect(0, 0, w, h)
-        }
         ctx.restore()
 
     }
