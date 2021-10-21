@@ -250,6 +250,17 @@ function getPath(arr, node) {
 
 }
 
+function getPath2(node) {
+    let paths = []
+    VOISINS_POSSIBLE.forEach((voisin, i) => {
+        if (!node.hasWall(i)) {
+            let p = node.position.ajout(voisin)
+            paths.push(p)
+        }
+    })
+    return paths
+}
+
 
 
 
