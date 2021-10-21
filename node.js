@@ -1,11 +1,21 @@
 class Node {
 
     constructor(x, y) {
-        this.x = x
-        this.y = y
         this.position = new Position(x, y)
         this.walls = 15
         this.discovered = false
+    }
+    get x() {
+        return this.position.x
+    }
+    get y() {
+        return this.position.y
+    }
+    set x(value) {
+        this.position.x = value
+    }
+    set y(value) {
+        this.position.y = value
     }
 
     removeWall(pos) {
