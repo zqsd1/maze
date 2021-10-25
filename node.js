@@ -4,6 +4,7 @@ class Node {
         this.position = new Position(x, y)
         this.walls = 15
         this.discovered = false
+        this.neighbourgs = []
     }
     get x() {
         return this.position.x
@@ -18,6 +19,24 @@ class Node {
         this.position.y = value
     }
 
+    get paths() {
+        return this.neighbourgs.reduce((prev, current, index) => {
+            if (!this.hasWall(index) && current != undefined) {
+                prev.push(current)
+            }
+            return prev
+        }, [])
+
+    }
+
+    get voisins() {
+        //get rid of undefinied
+        return this.neighbourgs.filter(e => e)
+    }
+    set voisins(value) {
+        this.neighbourgs = value
+    }
+
     removeWall(pos) {
         return this.walls = clearBit(this.walls, pos)
     }
@@ -30,66 +49,65 @@ class Node {
         return getBit(this.walls, pos)
     }
 
-
     draw(ctx) {
 
-      /* 
-      c'est beau mais ça prend 2x +de temps
-      let swap = true
+        /* 
+        c'est beau mais ça prend 2x +de temps
+        let swap = true
+          ctx.save()
+          ctx.translate(this.x * NODE_W, this.y * NODE_H)
+          ctx.moveTo(0, 0)
+  
+          for (let i = 0; i < VOISINS_POSSIBLE.length; i++) {
+              if (this.hasWall(i)) {
+                  ctx.lineTo(swap ? NODE_W : NODE_H, 0)
+              }
+              ctx.moveTo(swap ? NODE_W : NODE_H, 0)
+  
+              //TODO see transform
+              ctx.translate(swap ? NODE_W : NODE_H, 0)
+              ctx.rotate(Math.PI / 2)
+  
+              swap = !swap
+  
+          }
+  */
+
+
+
+
+        let w = ctx.canvas.width / COLONNES
+        let h = ctx.canvas.height / LIGNES
+
+        let posx = this.x * w
+        let posy = this.y * h
+
+
         ctx.save()
-        ctx.translate(this.x * NODE_W, this.y * NODE_H)
-        ctx.moveTo(0, 0)
+        ctx.translate(posx, posy)
 
-        for (let i = 0; i < VOISINS_POSSIBLE.length; i++) {
-            if (this.hasWall(i)) {
-                ctx.lineTo(swap ? NODE_W : NODE_H, 0)
-            }
-            ctx.moveTo(swap ? NODE_W : NODE_H, 0)
 
-            //TODO see transform
-            ctx.translate(swap ? NODE_W : NODE_H, 0)
-            ctx.rotate(Math.PI / 2)
-
-            swap = !swap
-
+        if (this.hasWall(0)) {
+            ctx.moveTo(0, 0)
+            ctx.lineTo(w, 0)
         }
-*/
+
+        if (this.hasWall(1)) {
+            ctx.moveTo(w, 0)
+            ctx.lineTo(w, h)
+        }
+
+        if (this.hasWall(2)) {
+            ctx.moveTo(w, h)
+            ctx.lineTo(0, h)
+        }
+
+        if (this.hasWall(3)) {
+            ctx.moveTo(0, h)
+            ctx.lineTo(0, 0)
+        }
 
 
-
-        
-                let w = ctx.canvas.width / COLONNES
-                let h = ctx.canvas.height / LIGNES
-        
-                let posx = this.x * w
-                let posy = this.y * h
-        
-        
-                ctx.save()
-                ctx.translate(posx, posy)
-        
-        
-                if (this.hasWall(0)) {
-                    ctx.moveTo(0, 0)
-                    ctx.lineTo(w, 0)
-                }
-        
-                if (this.hasWall(1)) {
-                    ctx.moveTo(w, 0)
-                    ctx.lineTo(w, h)
-                }
-        
-                if (this.hasWall(2)) {
-                    ctx.moveTo(w, h)
-                    ctx.lineTo(0, h)
-                }
-        
-                if (this.hasWall(3)) {
-                    ctx.moveTo(0, h)
-                    ctx.lineTo(0, 0)
-                }
-                
-                
         // ctx.stroke()
 
         ctx.restore()

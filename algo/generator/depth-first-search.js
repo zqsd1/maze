@@ -8,7 +8,7 @@ function DFS(graph, node) {
 
     node.discovered = true
 
-    for (const voisin of getVoisins(graph, node)) {
+    for (const voisin of node.voisins/*getVoisins(graph, node)*/) {
 
         if (voisin.discovered) continue
 
@@ -30,7 +30,7 @@ function DFS_Random(graph, node) {
 
     node.discovered = true
 
-    let voisins = getVoisins(graph, node)
+    let voisins = node.voisins//getVoisins(graph, node)
 
     while (voisins.length > 0) {
 

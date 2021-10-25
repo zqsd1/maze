@@ -64,6 +64,7 @@ const ctx = canvas.getContext('2d')
 buttonGenerate.addEventListener('click', generate)
 buttonSolve.addEventListener('click', solve)
 buttonDraw.addEventListener('click', draw)
+window.addEventListener('load', initialize)
 //#endregion
 
 function solve(evt) {
@@ -77,10 +78,24 @@ function solve(evt) {
     });
 }
 
+
 function generate(evt) {
     togglePause()
     console.log('generate');
     DFS_Random(nodes, nodes[0][0])
+}
+
+let nodes, nodesSimple
+function initialize() {
+    console.log('init');
+    nodes = generateArrayDouble(COLONNES, LIGNES, newNode)
+
+    nodesSimple = generateArray(COLONNES, LIGNES, newNode)
+
+
+    nodes.flat().forEach((node, index, arr) => {
+        node.voisins = getVoisins(arr, node)
+    })
 }
 
 
@@ -188,15 +203,12 @@ function generateArray(x, y, elementsCallback) {
 function getVoisins(arr, node) {
     //pour gerer les 2 types de array
     let array = arr.flat()
-    let voisins = []
 
-    VOISINS_POSSIBLE.forEach(voisin => {
-        voisins.push(array.find(element => {
-            return element.position.isEquals(node.position.ajout(voisin))
-        }))
-    });
-    //filter pour enlever les undefinied
-    return voisins.filter(element => element)
+    return VOISINS_POSSIBLE.reduce((prev, current) => {
+        prev.push(array.find(element => element.position.isEquals(node.position.ajout(current))))
+        return prev
+
+    }, [])
 }
 
 
@@ -218,29 +230,13 @@ function removeWall(node, voisin) {
 }
 
 
-//FIXME marche pas faut fournir les nodes du array
-// /**
-//  * list les voisins accessibles
-//  * @param {Node} node 
-//  * @returns {Position[]}
-//  */
-// function getPath(node) {
-//     let paths = []
-//     VOISINS_POSSIBLE.forEach((voisin, i) => {
-//         if (!node.hasWall(i)) {
-//             paths.push(node.position.ajout(voisin))
-//         }
-//     })²
-//     return paths
-// }
-
 /**
  * list les chemin possible du node
  * @param {Array} arr 
  * @param {Node} node 
  * @returns {Position[]}
  */
- function getPath(arr, node) {
+function getPath(arr, node) {
     let array = arr.flat()
     let paths = []
     VOISINS_POSSIBLE.forEach((voisin, i) => {
@@ -260,8 +256,4 @@ function removeWall(node, voisin) {
 
 
 
-
-let nodes = generateArrayDouble(COLONNES, LIGNES, newNode)
-
-let nodesSimple = generateArray(COLONNES, LIGNES, newNode)
 
