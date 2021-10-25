@@ -6,8 +6,8 @@ const FPS = 60
 const INTERVAL = 1000 / FPS
 const U_SPEED = 20
 
-const COLONNES = 8//x
-const LIGNES = 8//y
+const COLONNES = 10//x
+const LIGNES = 10//y
 
 
 const VOISINS_POSSIBLE = [
@@ -15,17 +15,7 @@ const VOISINS_POSSIBLE = [
     new Position(1, 0),//right
     new Position(0, 1),//bot
     new Position(-1, 0)//left
-    // { x: 0, y: 1 },
-    // { x: 1, y: 0 },
-    // { x: 0, y: -1 },
-    // { x: -1, y: 0 }
 ]
-
-// const WALLS_POSSIBLE = ['top', 'right', 'bottom', 'left']
-
-// const WALLS_OPPOSE = ['bottom', 'left', 'top', 'right']
-
-
 
 const NODE_W = CANVAS_WIDTH / COLONNES
 const NODE_H = CANVAS_HEIGHT / LIGNES
@@ -81,7 +71,7 @@ function solve(evt) {
     let resultat = A_Star(nodes, nodes[0][0], nodes[COLONNES - 1][LIGNES - 1])
     togglePause()
 
-    resultat.forEach(node => {
+    resultat?.forEach(node => {
         ctx.fillStyle = 'rgba(0,100,100,0.5)'
         ctx.fillRect(node.x * NODE_W, node.y * NODE_H, NODE_W, NODE_H)
     });
@@ -151,7 +141,10 @@ function togglePause() {
 function draw() {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
     ctx.beginPath()
+    // console.time('draw');
     nodes.flat().forEach(node => node.draw(ctx))
+    ctx.stroke()
+    // console.timeEnd('draw');
 }
 
 function update() {
@@ -190,7 +183,7 @@ function generateArray(x, y, elementsCallback) {
  * list les voisins du node existant dans arr
  * @param {Array} arr 
  * @param {Node} node 
- * @returns {Array}
+ * @returns {Node[]}
  */
 function getVoisins(arr, node) {
     //pour gerer les 2 types de array
@@ -216,45 +209,43 @@ function removeWall(node, voisin) {
     let diff = voisin.position.minus(node.position)
 
     let i = VOISINS_POSSIBLE.findIndex(element => element.isEquals(diff))
-    node.removeWall(i)
-    //node.walls = clearBit(node.walls, index)
+    if (i > -1) {
+        node.removeWall(i)
 
-    let j = VOISINS_POSSIBLE.findIndex(element => element.isEquals(diff.oppose))
-    voisin.removeWall(j)
-    // voisin.walls = clearBit(voisin.walls, j)
+        let j = VOISINS_POSSIBLE.findIndex(element => element.isEquals(diff.oppose))
+        voisin.removeWall(j)
+    }
 }
+
+
+//FIXME marche pas faut fournir les nodes du array
+// /**
+//  * list les voisins accessibles
+//  * @param {Node} node 
+//  * @returns {Position[]}
+//  */
+// function getPath(node) {
+//     let paths = []
+//     VOISINS_POSSIBLE.forEach((voisin, i) => {
+//         if (!node.hasWall(i)) {
+//             paths.push(node.position.ajout(voisin))
+//         }
+//     })²
+//     return paths
+// }
 
 /**
  * list les chemin possible du node
  * @param {Array} arr 
  * @param {Node} node 
- * @returns {Array}
+ * @returns {Position[]}
  */
-function getPath(arr, node) {
+ function getPath(arr, node) {
     let array = arr.flat()
     let paths = []
     VOISINS_POSSIBLE.forEach((voisin, i) => {
         if (!node.hasWall(i)) {
             let p = array.find(element => element.position.isEquals(node.position.ajout(voisin)))
-            paths.push(p)
-        }
-    })
-
-    // for (let i = 0; i < VOISINS_POSSIBLE.length; i++) {
-    //     if (!node.hasWall(i)) {
-    //         let p = array.find(element => element.position.isEquals(node.position.ajout(VOISINS_POSSIBLE[i])))
-    //         paths.push(p)
-    //     }
-    // }
-    return paths
-
-}
-
-function getPath2(node) {
-    let paths = []
-    VOISINS_POSSIBLE.forEach((voisin, i) => {
-        if (!node.hasWall(i)) {
-            let p = node.position.ajout(voisin)
             paths.push(p)
         }
     })

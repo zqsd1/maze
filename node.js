@@ -32,37 +32,65 @@ class Node {
 
 
     draw(ctx) {
-        let w = ctx.canvas.width / COLONNES
-        let h = ctx.canvas.height / LIGNES
 
-        let posx = this.x * w
-        let posy = this.y * h
-
-
+      /* 
+      c'est beau mais ça prend 2x +de temps
+      let swap = true
         ctx.save()
-        ctx.translate(posx, posy)
+        ctx.translate(this.x * NODE_W, this.y * NODE_H)
+        ctx.moveTo(0, 0)
 
+        for (let i = 0; i < VOISINS_POSSIBLE.length; i++) {
+            if (this.hasWall(i)) {
+                ctx.lineTo(swap ? NODE_W : NODE_H, 0)
+            }
+            ctx.moveTo(swap ? NODE_W : NODE_H, 0)
 
-        if (this.hasWall(0)) {
-            ctx.moveTo(0, 0)
-            ctx.lineTo(w, 0)
+            //TODO see transform
+            ctx.translate(swap ? NODE_W : NODE_H, 0)
+            ctx.rotate(Math.PI / 2)
+
+            swap = !swap
+
         }
+*/
 
-        if (this.hasWall(1)) {
-            ctx.moveTo(w, 0)
-            ctx.lineTo(w, h)
-        }
 
-        if (this.hasWall(2)) {
-            ctx.moveTo(w, h)
-            ctx.lineTo(0, h)
-        }
 
-        if (this.hasWall(3)) {
-            ctx.moveTo(0, h)
-            ctx.lineTo(0, 0)
-        }
-        ctx.stroke()
+        
+                let w = ctx.canvas.width / COLONNES
+                let h = ctx.canvas.height / LIGNES
+        
+                let posx = this.x * w
+                let posy = this.y * h
+        
+        
+                ctx.save()
+                ctx.translate(posx, posy)
+        
+        
+                if (this.hasWall(0)) {
+                    ctx.moveTo(0, 0)
+                    ctx.lineTo(w, 0)
+                }
+        
+                if (this.hasWall(1)) {
+                    ctx.moveTo(w, 0)
+                    ctx.lineTo(w, h)
+                }
+        
+                if (this.hasWall(2)) {
+                    ctx.moveTo(w, h)
+                    ctx.lineTo(0, h)
+                }
+        
+                if (this.hasWall(3)) {
+                    ctx.moveTo(0, h)
+                    ctx.lineTo(0, 0)
+                }
+                
+                
+        // ctx.stroke()
 
         ctx.restore()
 
