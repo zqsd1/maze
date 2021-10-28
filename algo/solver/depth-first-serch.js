@@ -7,7 +7,11 @@ function DFS_Iterative_Solver(start, goal) {
     while (path.length > 0) {
         currentNode = path.pop()
 
-        if (currentNode === goal) return path
+        if (currentNode === goal) {
+
+            path.push(currentNode)
+            return path
+        }
 
         let voisins = currentNode.paths.filter(element => element.discovered === false)
 
