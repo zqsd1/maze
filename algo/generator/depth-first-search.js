@@ -4,17 +4,17 @@
  * @param {Array} graph
  * @param {Node} node 
  */
-function DFS(graph, node) {
+function DFS(node) {
 
     node.discovered = true
 
-    for (const voisin of node.voisins/*getVoisins(graph, node)*/) {
+    for (const voisin of node.voisins) {
 
         if (voisin.discovered) continue
 
         removeWall(node, voisin)
 
-        DFS(graph, voisin)
+        DFS(voisin)
     }
 }
 
@@ -26,11 +26,11 @@ function DFS(graph, node) {
  * @param {Array} graph 
  * @param {Node} node 
  */
-function DFS_Random(graph, node) {
+function DFS_Random(node) {
 
     node.discovered = true
 
-    let voisins = node.voisins//getVoisins(graph, node)
+    let voisins = node.voisins
 
     while (voisins.length > 0) {
 
@@ -42,7 +42,7 @@ function DFS_Random(graph, node) {
 
         removeWall(node, voisin)
 
-        DFS_Random(graph, voisin)
+        DFS_Random(voisin)
 
     }
 

@@ -11,7 +11,7 @@ function reconstructPath(cameFrom, current) {
     return totalPath
 }
 
-function A_Star(graph, start, goal, h = heuristic) {
+function A_Star( start, goal, h = heuristic) {
 
     let openSet = [start]
 
@@ -35,7 +35,7 @@ function A_Star(graph, start, goal, h = heuristic) {
         openSet.splice(openSet.findIndex(e => e === currentNode), 1)
 
         let d = 1 //pytagore ....
-        for (const voisin of currentNode.paths/*getPath(graph, currentNode)*/) {
+        for (const voisin of currentNode.paths) {
 
             let tentative_gScore = mapGet(gScore, currentNode) + d
 

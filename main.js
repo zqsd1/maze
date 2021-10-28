@@ -84,7 +84,7 @@ function solve(evt) {
 function generate(evt) {
     togglePause()
     console.log('generate');
-    DFS_Random(nodes, nodes[0][0])
+    DFS_Random(nodes[0][0])
 }
 
 let nodes, nodesSimple
