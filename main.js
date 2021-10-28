@@ -69,7 +69,9 @@ window.addEventListener('load', initialize)
 
 function solve(evt) {
     console.log('solve');
-    let resultat = A_Star(nodes, nodes[0][0], nodes[COLONNES - 1][LIGNES - 1])
+    // let resultat = A_Star(nodes[0][0], nodes[COLONNES - 1][LIGNES - 1])
+    nodes.flat().forEach(e => e.discovered = false)
+    let resultat = DFS_Iterative_Solver(nodes[0][0], nodes[COLONNES - 1][LIGNES - 1])
     togglePause()
 
     resultat?.forEach(node => {
