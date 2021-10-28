@@ -2,7 +2,7 @@ class Node {
 
     constructor(x, y) {
         this.position = new Position(x, y)
-        this.walls = 15
+        this.walls = Math.pow(2, VOISINS_POSSIBLE.length) - 1
         this.discovered = false
         this.neighbourgs = []
     }
@@ -51,8 +51,8 @@ class Node {
 
     draw(ctx) {
 
-        /* 
-        c'est beau mais ça prend 2x +de temps
+        /*
+        //c'est beau mais ça prend 2x +de temps
         let swap = true
           ctx.save()
           ctx.translate(this.x * NODE_W, this.y * NODE_H)
@@ -70,42 +70,58 @@ class Node {
   
               swap = !swap
   
-          }
-  */
+          }*/
 
-
-
-
-        let w = ctx.canvas.width / COLONNES
-        let h = ctx.canvas.height / LIGNES
-
-        let posx = this.x * w
-        let posy = this.y * h
-
-
+        let swap = true
         ctx.save()
-        ctx.translate(posx, posy)
+        ctx.transform(1, 0, 0, 1, this.x * NODE_W, this.y * NODE_H)
+
+        ctx.moveTo(0, 0)
+        for (let i = 0; i < VOISINS_POSSIBLE.length; i++) {
+            if (this.hasWall(i)) {
+                ctx.lineTo(swap ? NODE_W : NODE_H, 0)
+            }
+            ctx.moveTo(swap ? NODE_W : NODE_H, 0)
+
+            transform(swap ? NODE_W : NODE_H, 0, 1, 2 * Math.PI / VOISINS_POSSIBLE.length)
+            //ctx.transform(0, 1, -1, 0, swap ? NODE_W : NODE_H, 0)
 
 
-        if (this.hasWall(0)) {
-            ctx.moveTo(0, 0)
-            ctx.lineTo(w, 0)
+            swap = !swap
         }
 
-        if (this.hasWall(1)) {
-            ctx.moveTo(w, 0)
-            ctx.lineTo(w, h)
-        }
 
-        if (this.hasWall(2)) {
-            ctx.moveTo(w, h)
-            ctx.lineTo(0, h)
-        }
-
-        if (this.hasWall(3)) {
-            ctx.moveTo(0, h)
-            ctx.lineTo(0, 0)
-        }
+        /*
+                let w = ctx.canvas.width / COLONNES
+                let h = ctx.canvas.height / LIGNES
+        
+                let posx = this.x * w
+                let posy = this.y * h
+        
+        
+                ctx.save()
+                ctx.translate(posx, posy)
+        
+        
+                if (this.hasWall(0)) {
+                    ctx.moveTo(0, 0)
+                    ctx.lineTo(w, 0)
+                }
+        
+                if (this.hasWall(1)) {
+                    ctx.moveTo(w, 0)
+                    ctx.lineTo(w, h)
+                }
+        
+                if (this.hasWall(2)) {
+                    ctx.moveTo(w, h)
+                    ctx.lineTo(0, h)
+                }
+        
+                if (this.hasWall(3)) {
+                    ctx.moveTo(0, h)
+                    ctx.lineTo(0, 0)
+                }*/
 
 
         // ctx.stroke()
@@ -132,3 +148,19 @@ function setBit(num, i) {
 
 }
 
+
+let a, b
+function transform(x, y, scale, rotate) {
+    if (a == undefined) {
+
+        const xAX = Math.cos(rotate) * scale;
+        const xAY = Math.sin(rotate) * scale;
+        a = xAX
+        b = xAY
+        ctx.transform(xAX, xAY, -xAY, xAX, x, y);
+    }
+    else
+        ctx.transform(a, b, -b, a, x, y)
+
+
+}
